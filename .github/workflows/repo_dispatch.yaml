@@ -14,12 +14,12 @@ jobs:
 
       - name: Update registration
         run: |
-          echo -e "---\n${{ !github.event.client_payload.owner }}:\n  expiry: `date --date "next year" "+%Y-%m-%d"`\n  users: ${{ !github.event.client_payload.users }}" > ${{ !github.event.client_payload.owner }}.yaml
+          echo -e "---\n${{ github.event.client_payload.owner }}:\n  expiry: `date --date "next year" "+%Y-%m-%d"`\n  users: ${{ github.event.client_payload.users }}" > ${{ github.event.client_payload.owner }}.yaml
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:
-          commit-message: "registration: ${{ !github.event.client_payload.owner }}"
-          title: "feat: registration ${{ !github.event.client_payload.owner }}"
+          commit-message: "registration: ${{ github.event.client_payload.owner }}"
+          title: "feat: Registration ${{ github.event.client_payload.owner }}"
           body: Register a tenant
-          branch: "reg-${{ !github.event.client_payload.owner }}"
+          branch: "reg-${{ github.event.client_payload.owner }}"
