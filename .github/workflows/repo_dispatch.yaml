@@ -1,0 +1,25 @@
+name: GitHub Actions repo dispatch Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on:
+  repository_dispatch:
+    types: [registration]
+
+jobs:
+  register-free-tier-tenant:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Update registration
+        run: |
+          echo "---\n${{ !github.event.client_payload.owner }}:\n  expiry: `date -v+1y "+%Y-%m-%d"`\n  users: ${{ !github.event.client_payload.users }}" > config/platforms/condenser/free-tier/${{ !github.event.client_payload.owner }}.yaml
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          commit-message: "registration: ${{ !github.event.client_payload.owner }}"
+          title: "feat: registration ${{ !github.event.client_payload.owner }}"
+          body: Register a tenant
+          branch: "reg-${{ !github.event.client_payload.owner }}"
